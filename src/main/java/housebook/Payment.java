@@ -21,12 +21,6 @@ public class Payment {
     @PostPersist
     public void onPostPersist(){
         System.out.println("##### onPostPersist status = " + this.getStatus());
-        if (this.getStatus().equals("BOOKED") || this.getStatus().equals("PAID")) {
-            Paid paid = new Paid();
-            BeanUtils.copyProperties(this, paid);
-            paid.setStatus("PAID");
-            paid.publishAfterCommit();
-        }
         
         try {
             Thread.currentThread().sleep((long) (400 + Math.random() * 220));
@@ -34,6 +28,13 @@ public class Payment {
 
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+        
+        if (this.getStatus().equals("BOOKED") || this.getStatus().equals("PAID")) {
+            Paid paid = new Paid();
+            BeanUtils.copyProperties(this, paid);
+            paid.setStatus("PAID");
+            paid.publishAfterCommit();
         }
     }
 
